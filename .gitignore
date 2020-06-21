@@ -1,0 +1,6 @@
+build
+.idea
+.gradle
+
+reflect-config.json
+gradle-kotlin-graalvm-demo-1.0-SNAPSHOT

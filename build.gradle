@@ -1,0 +1,73 @@
+
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4-M2'
+}
+
+apply plugin: 'kotlin-kapt' // required
+
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    mavenCentral()
+}
+
+
+configurations {
+    generateConfig
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    kapt 'info.picocli:picocli-codegen:4.3.2'                   // kapt or generateConfig??
+    generateConfig 'info.picocli:picocli-codegen:4.3.2'
+
+    implementation 'info.picocli:picocli:4.3.2'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.picocli.DemoKt'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+
+
+kapt {
+    arguments {
+        arg("project", "${project.group}/${project.name}")
+    }
+}
+
+task(generateGraalReflectionConfig, dependsOn: 'classes', type: JavaExec) {
+    main = 'picocli.codegen.aot.graalvm.ReflectionConfigGenerator'
+    classpath = configurations.generateConfig + sourceSets.main.runtimeClasspath
+    def outputFile = "${buildDir}/resources/main/META-INF/native-image/${project.group}/${project.name}/reflect-config.json"
+    args = ["--output=$outputFile", 'org.example.picocli.Demo']
+}
+assemble.dependsOn generateGraalReflectionConfig
+
+task(generateGraalResourceConfig, dependsOn: 'classes', type: JavaExec) {
+    main = 'picocli.codegen.aot.graalvm.ResourceConfigGenerator'
+    classpath = configurations.generateConfig + sourceSets.main.runtimeClasspath
+    def outputFile = "${buildDir}/resources/main/META-INF/native-image/${project.group}/${project.name}/resource-config.json"
+    args = ["--output=$outputFile", 'org.example.picocli.Demo']
+}
+assemble.dependsOn generateGraalResourceConfig

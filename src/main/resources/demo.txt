@@ -1,0 +1,1 @@
+To be included in resource-config.json when running gradle assemble or gradle build
