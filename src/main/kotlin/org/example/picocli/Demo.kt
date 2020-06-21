@@ -6,7 +6,7 @@ import kotlin.system.exitProcess
 
 @CommandLine.Command(
     name = "demo",
-    subcommands = [DemoCommand::class]
+    subcommands = [TextCommand::class]
 )
 class Demo : Callable<Int> {
     override fun call(): Int = 0
@@ -18,12 +18,15 @@ fun main(args: Array<String>) = when {
 }
 
 @CommandLine.Command(
-    name="demo",
+    name="text",
     description = ["Demo of Picocli, Kotlin and Gradle on GraalVM"]
 )
-class DemoCommand : Runnable {
+class TextCommand : Runnable {
     override fun run() {
-        println("Demo success!")
-    }
 
+        val resource = Demo::class.java.getResource("/demo.txt")
+        val content  = resource.readText()
+
+        println("Demo success! $content")
+    }
 }

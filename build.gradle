@@ -4,7 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4-M2'
 }
 
-apply plugin: 'kotlin-kapt' // required
+apply plugin: 'kotlin-kapt'
 
 
 group 'org.example'
@@ -48,8 +48,6 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-
-
 kapt {
     arguments {
         arg("project", "${project.group}/${project.name}")
@@ -68,6 +66,6 @@ task(generateGraalResourceConfig, dependsOn: 'classes', type: JavaExec) {
     main = 'picocli.codegen.aot.graalvm.ResourceConfigGenerator'
     classpath = configurations.generateConfig + sourceSets.main.runtimeClasspath
     def outputFile = "${buildDir}/resources/main/META-INF/native-image/${project.group}/${project.name}/resource-config.json"
-    args = ["--output=$outputFile", 'org.example.picocli.Demo']
+    args = ["--output=$outputFile", '-p=.*\\\\.txt$', 'org.example.picocli.Demo']
 }
 assemble.dependsOn generateGraalResourceConfig

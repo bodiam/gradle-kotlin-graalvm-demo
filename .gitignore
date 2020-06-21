@@ -2,5 +2,5 @@ build
 .idea
 .gradle
 
-reflect-config.json
-gradle-kotlin-graalvm-demo-1.0-SNAPSHOT
+*-config.json
+gradle-kotlin-graalvm-demo-*-SNAPSHOT

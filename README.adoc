@@ -1,0 +1,25 @@
+# GraalVM native images using PicoCLI, Kotlin and Gradle
+
+This an attempt to generate a native image is based on the slightly confusing documentation provided here:
+
+https://picocli.info/picocli-on-graalvm.html
+
+## Reflection configuration
+
+To generate the reflection config, execute:
+
+`./gradlew assemble` or `./gradlew build`
+
+The resulting build will generate a `reflect-config.json` in the `build/META-INF` directory
+
+## Native Image generation
+
+The native image is generated using the following command:
+
+`native-image -H:ReflectionConfigurationFiles=reflect-config.json -H:ResourceConfigurationFiles=resource-config.json -H:Log=registerResource -jar build/libs/gradle-kotlin-graalvm-demo-1.0-SNAPSHOT.jar  --no-server`
+
+## Loading of resources
+
+By default GraalVM doesn't pack resources into the image. The example loads a file from the classpath, and using the above command
+will (using the generated resource-config) will add the resource to the native image.
+
