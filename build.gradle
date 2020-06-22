@@ -27,6 +27,14 @@ dependencies {
     generateConfig 'info.picocli:picocli-codegen:4.3.2'
 
     implementation 'info.picocli:picocli:4.3.2'
+    implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.5.2'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.15.0'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jar {
